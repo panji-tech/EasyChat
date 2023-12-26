@@ -7,7 +7,22 @@
     <!--在cn.mccreefei包下自动扫描组件加入容器-->
     <context:component-scan base-package="cn.mccreefei"/>
     <!--mvc注解支持-->
-    <mvc:annotation-driven/>
+    <!-- 注解驱动 -->
+    <mvc:annotation-driven>
+        <!-- 指定http返回编码格式，不然返回ajax请求json会出现中文乱码 -->
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json;charset=UTF-8</value>
+                        <value>*/*;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
     <!--配置静态文件路径与映射-->
     <mvc:resources mapping="/resources/**" location="/resources/"/>
 

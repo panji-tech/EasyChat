@@ -9,15 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.sql.DataSource;
 import java.util.Date;
 
 /**
- *登录和注册的控制器
+ * 登录和注册的控制器
  */
 @Controller
 public class LoginController {
@@ -33,22 +35,23 @@ public class LoginController {
 
     /**
      * 反馈前端ajax登录的消息
+     *
      * @param user
      * @return
      */
     @RequestMapping(value = "/reply/login", method = RequestMethod.POST)
     @ResponseBody
-    public ReplyLoginMessage replayLoginMessage(@RequestBody User user){
+    public ReplyLoginMessage replayLoginMessage(@RequestBody User user) {
         if (user.getName() == null || user.getName().trim().equals("")
-                || user.getPassword() == null || user.getPassword().equals("")){
+                || user.getPassword() == null || user.getPassword().equals("")) {
             return new ReplyLoginMessage(false, ReplyLoginMessage.USER_NAME_OR_PASSWORD_NULL);
         }
         boolean isExist = userService.isExistUser(user.getName());
-        if (!isExist){
+        if (!isExist) {
             return new ReplyLoginMessage(false, ReplyLoginMessage.USER_NAME_NOT_EXIST);
         }
         User res = userService.validateUserPassword(user.getName(), user.getPassword());
-        if (res == null){
+        if (res == null) {
             return new ReplyLoginMessage(false, ReplyLoginMessage.USER_PASSWORD_WRONG);
         }
         return new ReplyLoginMessage(true);
@@ -56,17 +59,18 @@ public class LoginController {
 
     /**
      * 反馈前端ajax注册的消息
+     *
      * @param user
      * @return
      */
     @RequestMapping(value = "/reply/regist", method = RequestMethod.POST)
     @ResponseBody
-    public ReplyRegistMessage replyRegistMessage(@RequestBody User user){
+    public ReplyRegistMessage replyRegistMessage(@RequestBody User user) {
         boolean isExist = userService.isExistUser(user.getName());
-        if (isExist){
+        if (isExist) {
             return new ReplyRegistMessage(false, ReplyRegistMessage.USER_NAME_EXIST);
         }
-        if (user.getPassword() != null){
+        if (user.getPassword() != null) {
             userService.insertUser(user.getName(), user.getPassword());
         }
         return new ReplyRegistMessage(true);
@@ -74,14 +78,16 @@ public class LoginController {
 
     /**
      * 登录进入聊天室
+     *
      * @param user
      * @param request
      * @return
      */
-    @RequestMapping(value = "/chat", method = RequestMethod.POST)
-    public String loginIntoChatRoom(User user, HttpServletRequest request){
+    @RequestMapping(value = "/chat", method = RequestMethod.POST, produces = {"application/json;charset=utf-8"})
+    public String loginIntoChatRoom(User user, HttpServletRequest request) {
+        String name = request.getParameter("name");
         user = userService.validateUserPassword(user.getName(), user.getPassword());
-        if (user == null){
+        if (user == null) {
             return "login";
         }
         user.setLoginDate(new Date());
@@ -101,19 +107,21 @@ public class LoginController {
 
     /**
      * 登录页面
+     *
      * @return
      */
     @RequestMapping(value = {"/", "/index", ""}, method = RequestMethod.GET)
-    public String index(){
+    public String index() {
         return "index";
     }
 
     /**
      * 返回当前在线人数
+     *
      * @return
      */
     @SubscribeMapping("/chat/participants")
-    public Long getActiveUserNumber(){
+    public Long getActiveUserNumber() {
         return Long.valueOf(participantRepository.getActiveSessions().values().size());
     }
 }

@@ -24,9 +24,10 @@ $(function () {
             url: replyUrl,
             data: JSON.stringify({'name': username, 'password': password}),
             dataType: "json",
-            contentType: "application/json",
+            contentType: "application/json;charset=utf-8",
             success: function (data) {
                 console.log(data);
+                console.log('replyUrl='+replyUrl);
                 var successed = data.successed;
                 if (successed) {
                     $("#login_form").submit();
@@ -69,7 +70,7 @@ $(function () {
                 url: $("#replyRegistUrl").val().trim(),
                 data: sendData,
                 dataType: "json",
-                contentType: "application/json",
+                contentType: "application/json;charset=utf-8",
                 success: function (data) {
                     console.log(data);
                     if (data.successed) {
@@ -114,7 +115,7 @@ $(function () {
                 url: $("#replyRegistUrl").val().trim(),
                 data: sendData,
                 dataType: "json",
-                contentType: "application/json",
+                contentType: "application/json;charset=utf-8",
                 success : function (data) {
                     if (data.successed){
                         sweetAlert("注册成功啦！", "快去登录~加入聊天吧~", "success");

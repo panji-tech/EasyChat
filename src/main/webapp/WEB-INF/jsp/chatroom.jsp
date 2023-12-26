@@ -1,8 +1,9 @@
-<%@page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>EasyChat</title>
+    <title>微聊</title>
 
     <link rel="icon" href="<c:url value="/resources/image/favicon.ico"/> " type="image/x-icon">
 
@@ -10,7 +11,7 @@
 <body background="<c:url value="/resources/image/1.jpg"/> ">
 <div class="wrapper">
     <div class="banner">
-        <h1>EasyChat :)</h1>
+        <h1>微聊</h1>
         <div id="activeUserWraper">
             <span class="label label-info" id="status"></span><span class="label">位用户当前在线</span>
         </div>
